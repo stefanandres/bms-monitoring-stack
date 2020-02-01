@@ -1,0 +1,6 @@
+bms-db/bms.db
+prometheus/storage
+grafana/storage
+**/__pycache__
+**/*.egg-info
+**/*.swp

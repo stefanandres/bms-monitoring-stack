@@ -1,0 +1,65 @@
+networks:
+  front-tier:
+  back-tier:
+
+version: '3'
+services:
+  prometheus:
+    image: prom/prometheus:v2.15.2
+    volumes:
+     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+     - ./prometheus/storage:/prometheus
+    command: "--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --storage.tsdb.retention.time=2y"
+    restart: always
+    ports:
+     - 9090:9090
+    depends_on:
+     - bms-exporter
+    networks:
+      - back-tier
+  #exporter:
+  #  image: prom/node-exporter:latest
+  #  ports:
+  #   - "9100:9100"
+  ##    network_mode: host
+  bms-exporter:
+    container_name: bms-exporter
+    image: bms-exporter
+    restart: always
+    volumes:
+      - ./bms-exporter/:/app
+      - ./bms-db:/bms-db
+    ports:
+      - 8000:8000 
+    environment:
+      - DATABASE=/bms-db/bms.db
+    networks:
+      - back-tier
+    depends_on:
+     - bms-db
+  bms-db:
+    container_name: bms-db
+    image: bms-db
+    restart: always
+    privileged: true
+    volumes:
+      - ./bms-db:/app
+      - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket 
+    network_mode: host
+    command: /app/bms-db A4:C1:38:9B:8B:2F
+  grafana:
+    image: grafana/grafana:6.6.0
+    user: "104"
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana/storage:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    env_file:
+      - ./grafana/config.monitoring
+    networks:
+      - back-tier
+      - front-tier
+    restart: always
