@@ -30,3 +30,7 @@ Grafana setups a dashboard to visualize the data.
 
 
 This project is only for private usage. This has been done only in a few hours, so expect shortcuts and errors on the way. If you want to use it, change the MAC address in [docker-compose.yaml](docker-compose.yaml).
+
+## Grafana Demo
+
+![](screenshots/grafana-dashboard.png)
