@@ -21,6 +21,7 @@ Prometheus is configured to scrape the exporter.
 
 Grafana setups a dashboard to visualize the data.
 
+This runs on a Raspberry Pi 3b+ directly in the caravan.
 
 ## See also
   * heavily based on https://github.com/sw-home/FHEM-BluetoothSmartBMS
