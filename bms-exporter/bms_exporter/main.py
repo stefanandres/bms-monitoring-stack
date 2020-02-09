@@ -1,3 +1,4 @@
+import datetime
 import sys
 import time
 
@@ -16,6 +17,7 @@ class Metrics:
         self.database = ''
         conn = sqlite3.connect(database)
         self.c = conn.cursor()
+        self.last_update_gauge = Gauge('bms_last_update', 'Metrics of last update')
         self.ah_percent_gauge = Gauge('bms_ah_percent', 'Metrics of percent of capacity')
         self.ah_remaining_gauge = Gauge('bms_ah_remaining', 'Metrics of remaining capcity')
         self.ah_full_gauge = Gauge('bms_ah_full', 'Metrics of full capacity')
@@ -27,22 +29,19 @@ class Metrics:
 
     def build_metrics(self):
         data = self.c.execute('select * from readings  ORDER BY date DESC LIMIT 1').fetchone()
-        ah_percent = data[1]
-        ah_remaining = data[2]
-        ah_full = data[3]
-        power = data[4]
-        voltage = data[5]
-        current = data[6]
-        temperature = data[7]
-        cycles = data[8]
-        self.ah_percent_gauge.set(ah_percent)
-        self.ah_remaining_gauge.set(ah_remaining)
-        self.ah_full_gauge.set(ah_remaining)
-        self.power_gauge.set(power)
-        self.current_gauge.set(current)
-        self.voltage_gauge.set(voltage)
-        self.temperature_gauge.set(temperature)
-        self.cycles_gauge.set(cycles)
+        last_update = data[0]
+        last_update = datetime.datetime.strptime(last_update, '%Y-%m-%d %H:%M:%S')
+        last_update = last_update.timestamp()
+        self.last_update_gauge.set(last_update)
+        self.ah_percent_gauge.set(data[1])
+        self.ah_remaining_gauge.set(data[2])
+        self.ah_full_gauge.set(data[3])
+        self.power_gauge.set(data[4])
+        self.voltage_gauge.set(data[5])
+        self.current_gauge.set(data[6])
+        self.temperature_gauge.set(data[7])
+        self.cycles_gauge.set(data[8])
+
 
 @click.command()
 @click.option('--database', '-f', envvar='DATABASE', help='Path to sqlite db')

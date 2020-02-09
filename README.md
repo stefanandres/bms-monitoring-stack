@@ -3,6 +3,7 @@
 This stack deployes:
   * bms-db
   * bms-exporter
+  * dht-exporter (DHT22 temp/humidity sensor)
   * prometheus
   * grafana
 

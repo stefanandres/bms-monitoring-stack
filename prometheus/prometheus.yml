@@ -22,3 +22,11 @@ scrape_configs:
     scrape_interval: "10s"
     static_configs:
       - targets: ['bms-exporter:8000']
+  - job_name: "fritzbox"
+    scrape_interval: "15s"
+    static_configs:
+      - targets: ['fritzbox-exporter:9133']
+  - job_name: "dht"
+    scrape_interval: "60s"
+    static_configs:
+      - targets: ['dht-exporter:8001']

@@ -47,6 +47,29 @@ services:
       - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket 
     network_mode: host
     command: /app/bms-db A4:C1:38:9B:8B:2F
+  fritzbox-exporter:
+    container_name: fritzbox_exporter
+    image: fritzbox_exporter
+    restart: always
+    ports:
+      - 9133:9133 
+    networks:
+      - back-tier
+    command:
+    - -gateway-address
+    - 192.168.178.1
+  dht-exporter:
+    container_name: dht-exporter
+    image: dht-exporter
+    restart: always
+    ports:
+      - 8001:8001
+    networks:
+      - back-tier
+    command: "app/dht_exporter.py -r pi -g 4"
+    privileged: true
+    volumes:
+      - ./dht-exporter:/app
   grafana:
     image: grafana/grafana:6.6.0
     user: "104"
