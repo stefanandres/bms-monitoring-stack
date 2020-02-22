@@ -22,6 +22,7 @@ services:
   #  ports:
   #   - "9100:9100"
   ##    network_mode: host
+  # docker run -p 8000:8000 -v $PWD/bms-exporter:/app -v $PWD/bms-db:/bms-db -e DATABASE=/bms-db/bms.db -it --entrypoint /bin/sh bms-exporter
   bms-exporter:
     container_name: bms-exporter
     image: bms-exporter
@@ -71,7 +72,7 @@ services:
     volumes:
       - ./dht-exporter:/app
   grafana:
-    image: grafana/grafana:6.6.0
+    image: grafana/grafana:6.6.2
     user: "104"
     depends_on:
       - prometheus
