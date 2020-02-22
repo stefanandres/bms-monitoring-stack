@@ -51,7 +51,7 @@ class Metrics:
         else:
             mode = 'discharging'
 
-        self.mode_enum.state('charging')
+        self.mode_enum.state(mode)
 
         # Calculate mean value over 5m
         currents = []
@@ -67,8 +67,6 @@ class Metrics:
             smart = to40
         else:
             smart = to100
-
-        print(smart)
 
         self.time_left.labels(mode='smart').set(smart)
         self.time_left.labels(mode='to100').set(to100)
