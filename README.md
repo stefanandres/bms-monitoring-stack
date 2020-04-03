@@ -36,3 +36,11 @@ This project is only for private usage. This has been done only in a few hours, 
 ## Grafana Demo
 
 ![](screenshots/grafana-dashboard.png)
+
+## Known issues
+
+Sometimes the bms-db hangs when not getting data, until this is fixed you can restart the container on stalled db entries:
+
+```sh
+cd bms-db; while sleep 5; do find . -name bms.db -mmin +1 | grep -q bms.db && (date; cd ..; docker-compose restart bms-db); done
+```
