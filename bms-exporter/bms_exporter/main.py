@@ -60,6 +60,8 @@ class Metrics:
             currents.append(row[0])
 
         mean_current = sum(currents) / len(currents)
+        if mean_current == float(0):
+          return
         to100 = (ah_full_gauge - ah_remaining_gauge) / mean_current
         to40 = (ah_remaining_gauge - (ah_full_gauge * 0.4)) / mean_current
         to0 = ah_remaining_gauge / mean_current
