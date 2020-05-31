@@ -5,7 +5,7 @@ networks:
 version: '3'
 services:
   prometheus:
-    image: prom/prometheus:v2.15.2
+    image: prom/prometheus:v2.18.1
     volumes:
      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
      - ./prometheus/storage:/prometheus
@@ -24,6 +24,7 @@ services:
   ##    network_mode: host
   # docker run -p 8000:8000 -v $PWD/bms-exporter:/app -v $PWD/bms-db:/bms-db -e DATABASE=/bms-db/bms.db -it --entrypoint /bin/sh bms-exporter
   bms-exporter:
+    build: ./bms-exporter/
     container_name: bms-exporter
     image: bms-exporter
     restart: always
@@ -39,6 +40,7 @@ services:
     depends_on:
      - bms-db
   bms-db:
+    build: ./bms-db/
     container_name: bms-db
     image: bms-db
     restart: always
@@ -60,6 +62,7 @@ services:
     - -gateway-address
     - 192.168.178.1
   dht-exporter:
+    build: ./dht-exporter/
     container_name: dht-exporter
     image: dht-exporter
     restart: always
@@ -72,7 +75,7 @@ services:
     volumes:
       - ./dht-exporter:/app
   grafana:
-    image: grafana/grafana:6.6.2
+    image: grafana/grafana:7.0.1
     user: "104"
     depends_on:
       - prometheus
