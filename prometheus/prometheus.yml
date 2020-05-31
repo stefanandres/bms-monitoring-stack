@@ -30,3 +30,7 @@ scrape_configs:
     scrape_interval: "60s"
     static_configs:
       - targets: ['dht-exporter:8001']
+  - job_name: "node-exporter"
+    scrape_interval: "60s"
+    static_configs:
+      - targets: ['node-exporter:9100']

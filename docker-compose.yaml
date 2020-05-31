@@ -17,11 +17,22 @@ services:
      - bms-exporter
     networks:
       - back-tier
-  #exporter:
-  #  image: prom/node-exporter:latest
-  #  ports:
-  #   - "9100:9100"
-  ##    network_mode: host
+  node-exporter:
+    image: prom/node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command: 
+      - '--path.procfs=/host/proc' 
+      - '--path.sysfs=/host/sys'
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+    ports:
+      - 9100:9100
+    networks:
+      - back-tier
+    restart: always
   # docker run -p 8000:8000 -v $PWD/bms-exporter:/app -v $PWD/bms-db:/bms-db -e DATABASE=/bms-db/bms.db -it --entrypoint /bin/sh bms-exporter
   bms-exporter:
     build: ./bms-exporter/
@@ -39,6 +50,7 @@ services:
       - back-tier
     depends_on:
      - bms-db
+  # docker run -it -v $PWD/bms-db:/app -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket --privileged bms-db
   bms-db:
     build: ./bms-db/
     container_name: bms-db
