@@ -4,8 +4,16 @@ networks:
 
 version: '3'
 services:
+  autoheal:
+    restart: always
+    image: docker:stable
+    entrypoint: "/bin/sh -c"
+    command: '/scripts/restart_bms-db'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $PWD/scripts:/scripts
   prometheus:
-    image: prom/prometheus:v2.18.1
+    image: prom/prometheus:v2.32.1
     volumes:
      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
      - ./prometheus/storage:/prometheus

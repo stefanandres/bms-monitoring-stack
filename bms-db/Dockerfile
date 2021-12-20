@@ -18,3 +18,4 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8  
 RUN pip3 install gatt
 
+HEALTHCHECK --interval=60s CMD find /app -name bms.db -mmin -1 | fgrep bms.db
