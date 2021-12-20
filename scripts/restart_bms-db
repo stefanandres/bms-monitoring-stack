@@ -1,0 +1,8 @@
+#!/bin/sh
+
+while sleep 60; do
+  if docker ps --filter name=bms-db --format "{{.Status}}" | grep unhealthy; then
+    echo "restarting bms-db"
+    docker restart bms-db
+  fi
+done
