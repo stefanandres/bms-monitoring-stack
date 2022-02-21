@@ -42,6 +42,10 @@ This project is only for private usage. This has been done only in a few hours, 
 
 Sometimes the bms-db hangs when not getting data, until this is fixed you can restart the container on stalled db entries:
 
+There is a [autoheal](docker-compose.yaml#L7) container that tries to restart the bms-db container when this happens.
+
+This basically does
+
 ```sh
 cd bms-db; while sleep 5; do find . -name bms.db -mmin +1 | grep -q bms.db && (date; cd ..; docker-compose restart bms-db); done
 ```
